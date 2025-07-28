@@ -1,8 +1,16 @@
 using System.Security.Claims;
+using BookstoreApi.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(
+        "Host=localhost;Port=5432;Database=bookstore_db;Username=postgres;Password=82vu7jhw"
+    )
+);
 
 // Adiciona autenticação com JWT emitido pelo Keycloak
 builder
