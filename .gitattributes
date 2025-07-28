@@ -1,0 +1,12 @@
+# Treat text files as text and enforce LF (Linux-style) line endings
+* text=auto eol=lf
+
+# Ensure C# files use proper diffing
+*.cs diff=csharp
+
+# Avoid conflicts with binary files
+*.dll binary
+*.exe binary
+*.png binary
+*.jpg binary
+*.pdf binary

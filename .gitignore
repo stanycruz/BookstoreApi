@@ -1,0 +1,31 @@
+## Build results
+bin/
+obj/
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Visual Studio Code
+.vscode/
+.history/
+
+## OS files
+.DS_Store
+Thumbs.db
+
+## Rider
+.idea/
+*.sln.iml
+
+## Logs
+*.log
+
+## dotnet artifacts
+*.dbmdl
+*.pdb
+
+## Others
+*.env
