@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +15,6 @@ builder
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateAudience = false,
-
             RoleClaimType = ClaimTypes.Role,
         };
 
@@ -56,30 +54,13 @@ builder
     });
 
 builder.Services.AddAuthorization();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/", () => "API pública - sem login");
-
-app.MapGet(
-        "/admin",
-        (HttpContext http) =>
-        {
-            return $"Olá, {http.User.Identity?.Name}! Você acessou a rota /admin";
-        }
-    )
-    .RequireAuthorization(new AuthorizeAttribute { Roles = "admin" });
-
-app.MapGet(
-        "/claims",
-        (HttpContext http) =>
-        {
-            return Results.Json(http.User.Claims.Select(c => new { c.Type, c.Value }));
-        }
-    )
-    .RequireAuthorization();
+app.MapControllers();
 
 app.Run();
