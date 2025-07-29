@@ -1,3 +1,4 @@
+using BookstoreApi.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,11 +8,18 @@ namespace BookstoreApi.Controllers.V1;
 [Route("v1/[controller]")]
 public class AdminController : ControllerBase
 {
+    private readonly UserService _userService;
+
+    public AdminController(UserService userService)
+    {
+        _userService = userService;
+    }
+
     [HttpGet]
     [Authorize(Roles = "admin")]
-    public IActionResult Get()
+    public async Task<IActionResult> Get()
     {
-        var userName = User.Identity?.Name ?? "desconhecido";
-        return Ok($"Olá, {userName}! Você acessou a rota /v1/admin");
+        var user = await _userService.GetOrCreateFromClaimsAsync(User);
+        return Ok($"Olá, {user.Name}! Você está sincronizado no banco com role '{user.Role}'");
     }
 }
