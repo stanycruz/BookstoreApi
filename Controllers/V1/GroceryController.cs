@@ -1,3 +1,4 @@
+using BookstoreApi.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,7 +12,7 @@ public class GroceryController : ControllerBase
     [Authorize(Roles = "grocery")]
     public IActionResult Get()
     {
-        var user = User.Identity?.Name ?? "desconhecido";
-        return Ok($"Olá, {user}! Você acessou o endpoint /v1/grocery");
+        var user = UserHttpContextHelper.GetCurrentUser(HttpContext);
+        return Ok($"Olá, {user?.Name}! Você está autenticado como '{user?.Role}'");
     }
 }
