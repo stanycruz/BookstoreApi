@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using BookstoreApi.Application.Services;
 using BookstoreApi.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -62,6 +63,7 @@ builder
     });
 
 builder.Services.AddAuthorization();
+builder.Services.AddScoped<UserService>();
 builder.Services.AddControllers();
 
 var app = builder.Build();
