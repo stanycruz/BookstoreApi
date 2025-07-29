@@ -15,7 +15,16 @@ public class UserService
 
     public async Task<User> GetOrCreateFromClaimsAsync(ClaimsPrincipal claims)
     {
-        var sub = claims.FindFirst("sub")?.Value;
+        var sub = claims.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        // TODO Você pode ainda adicionar um fallback,
+        // caso em algum ambiente futuro o sub não seja mapeado automaticamente:
+        // var sub =
+        //     claims.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? claims.FindFirst("sub")?.Value;
+
+        // if (string.IsNullOrWhiteSpace(sub))
+        //     throw new UnauthorizedAccessException("Token sem 'sub' ou 'nameidentifier'.");
+
         if (string.IsNullOrWhiteSpace(sub))
             throw new UnauthorizedAccessException("Token sem 'sub'.");
 
