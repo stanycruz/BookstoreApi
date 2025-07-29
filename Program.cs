@@ -65,6 +65,7 @@ builder
 
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<BookService>();
 builder.Services.AddControllers();
 
 var app = builder.Build();
