@@ -68,8 +68,24 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<BookService>();
 builder.Services.AddControllers();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "AllowFrontend",
+        builder =>
+        {
+            builder
+                .WithOrigins("http://localhost:5173")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
+        }
+    );
+});
+
 var app = builder.Build();
 
+app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseMiddleware<UserSyncMiddleware>();
 app.UseAuthorization();
