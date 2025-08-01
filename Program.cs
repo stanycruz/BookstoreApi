@@ -1,8 +1,10 @@
 using System.Security.Claims;
 using BookstoreApi.Application.Services;
+using BookstoreApi.Infrastructure.Authorization;
 using BookstoreApi.Infrastructure.Data;
 using BookstoreApi.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -63,7 +65,36 @@ builder
         };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(
+        "RequireAdmin",
+        policy => policy.Requirements.Add(new RoleRequirement("admin"))
+    );
+
+    options.AddPolicy(
+        "RequireOwner",
+        policy => policy.Requirements.Add(new RoleRequirement("owner"))
+    );
+
+    options.AddPolicy(
+        "RequireGrocery",
+        policy => policy.Requirements.Add(new RoleRequirement("grocery"))
+    );
+
+    options.AddPolicy(
+        "RequireMaintainer",
+        policy => policy.Requirements.Add(new RoleRequirement("maintainer"))
+    );
+
+    options.AddPolicy(
+        "RequireRookie",
+        policy => policy.Requirements.Add(new RoleRequirement("rookie"))
+    );
+});
+
+builder.Services.AddSingleton<IAuthorizationHandler, RoleAuthorizationHandler>();
+
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<BookService>();
 builder.Services.AddControllers();
