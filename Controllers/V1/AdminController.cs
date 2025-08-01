@@ -8,8 +8,8 @@ namespace BookstoreApi.Controllers.V1;
 [Route("v1/[controller]")]
 public class AdminController : ControllerBase
 {
+    [Authorize(Policy = "RequireAdmin")]
     [HttpGet]
-    [Authorize(Roles = "admin")]
     public IActionResult Get()
     {
         var user = UserHttpContextHelper.GetCurrentUser(HttpContext);

@@ -17,9 +17,8 @@ public class BooksController : ControllerBase
         _bookService = bookService;
     }
 
-    // GET: /v1/books
+    [Authorize(Policy = "RequireMaintainer")]
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult> GetAll()
     {
         var user = UserHttpContextHelper.GetCurrentUser(HttpContext);
@@ -30,9 +29,8 @@ public class BooksController : ControllerBase
         return Ok(books);
     }
 
-    // GET: /v1/books/{id}
+    [Authorize(Policy = "RequireMaintainer")]
     [HttpGet("{id}")]
-    [Authorize]
     public async Task<IActionResult> GetById(Guid id)
     {
         var user = UserHttpContextHelper.GetCurrentUser(HttpContext);
@@ -46,9 +44,8 @@ public class BooksController : ControllerBase
         return Ok(book);
     }
 
-    // POST: /v1/books
+    [Authorize(Policy = "RequireMaintainer")]
     [HttpPost]
-    [Authorize(Roles = "admin,owner,maintainer")]
     public async Task<IActionResult> Create([FromBody] Book book)
     {
         var user = UserHttpContextHelper.GetCurrentUser(HttpContext);
@@ -60,9 +57,8 @@ public class BooksController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
-    // PATCH: /v1/books/{id}
+    [Authorize(Policy = "RequireMaintainer")]
     [HttpPatch("{id}")]
-    [Authorize(Roles = "admin,owner")]
     public async Task<IActionResult> Update(Guid id, [FromBody] Book book)
     {
         var user = UserHttpContextHelper.GetCurrentUser(HttpContext);
@@ -80,9 +76,8 @@ public class BooksController : ControllerBase
         return Ok(existing);
     }
 
-    // DELETE: /v1/books/{id}
+    [Authorize(Policy = "RequireGrocery")]
     [HttpDelete("{id}")]
-    [Authorize(Roles = "admin,owner")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var user = UserHttpContextHelper.GetCurrentUser(HttpContext);

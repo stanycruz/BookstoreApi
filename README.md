@@ -20,6 +20,12 @@ API RESTful construída em .NET 9 com autenticação via [Keycloak](https://www.
 A API utiliza tokens JWT emitidos pelo Keycloak.
 
 ### 🔑 Roles disponíveis:
+### 🛡️ Política personalizada por roles
+
+A API possui validação detalhada de permissões por role através de policies customizadas. É possível definir que apenas determinados perfis (ex: `admin` ou `maintainer`) tenham acesso a uma rota, e a resposta 403 será personalizada conforme a role exigida.
+
+Isso é feito através de `IAuthorizationHandler` e `AuthorizationRequirement` registrados via injeção de dependência.
+
 
 | Role         | Permissões principais                                     |
 |--------------|-----------------------------------------------------------|
@@ -100,6 +106,16 @@ dotnet run
 ```
 
 ### 5. (Opcional) Rodar via Docker (em breve)
+### 6. Testar via Swagger
+
+Acesse `http://localhost:5000` no navegador. Clique em "Authorize" e insira o token JWT no formato:
+
+```
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30
+```
+
+O Swagger está configurado para listar todas as rotas, inclusive as protegidas, e permite testá-las com autenticação.
+
 
 ---
 

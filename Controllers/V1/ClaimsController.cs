@@ -7,8 +7,8 @@ namespace BookstoreApi.Controllers.V1;
 [Route("v1/[controller]")]
 public class ClaimsController : ControllerBase
 {
-    [HttpGet]
     [Authorize]
+    [HttpGet]
     public IActionResult Get()
     {
         var claims = User.Claims.Select(c => new { c.Type, c.Value });
