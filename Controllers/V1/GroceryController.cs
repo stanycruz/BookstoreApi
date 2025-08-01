@@ -8,8 +8,8 @@ namespace BookstoreApi.Controllers.V1;
 [Route("v1/[controller]")]
 public class GroceryController : ControllerBase
 {
+    [Authorize(Policy = "RequireGrocery")]
     [HttpGet]
-    [Authorize(Roles = "grocery")]
     public IActionResult Get()
     {
         var user = UserHttpContextHelper.GetCurrentUser(HttpContext);

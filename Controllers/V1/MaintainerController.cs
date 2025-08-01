@@ -8,8 +8,8 @@ namespace BookstoreApi.Controllers.V1;
 [Route("v1/[controller]")]
 public class MaintainerController : ControllerBase
 {
+    [Authorize(Policy = "RequireMaintainer")]
     [HttpGet]
-    [Authorize(Roles = "maintainer")]
     public IActionResult Get()
     {
         var user = UserHttpContextHelper.GetCurrentUser(HttpContext);
