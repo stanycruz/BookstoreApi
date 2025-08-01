@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -114,6 +115,54 @@ builder.Services.AddCors(options =>
     );
 });
 
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    // Documentação básica
+    options.SwaggerDoc(
+        "v1",
+        new OpenApiInfo
+        {
+            Title = "Relatórios API",
+            Version = "v1",
+            Description = "API para geração e controle de relatórios com autenticação via Keycloak",
+        }
+    );
+
+    // Autenticação via Bearer Token
+    options.AddSecurityDefinition(
+        "Bearer",
+        new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            Scheme = "bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "Insira o token JWT como: Bearer {seu_token}",
+        }
+    );
+
+    // Aplica o esquema de segurança globalmente
+    options.AddSecurityRequirement(
+        new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Id = "Bearer",
+                        Type = ReferenceType.SecurityScheme,
+                    },
+                },
+                Array.Empty<string>()
+            },
+        }
+    );
+});
+
 var app = builder.Build();
 
 app.UseCors("AllowFrontend");
@@ -122,5 +171,19 @@ app.UseMiddleware<UserSyncMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();
+
+if (
+    app.Environment.IsDevelopment()
+    || app.Environment.IsStaging()
+    || app.Environment.IsProduction()
+)
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Relatórios API v1");
+        options.RoutePrefix = string.Empty;
+    });
+}
 
 app.Run();
